@@ -558,10 +558,23 @@
           coreApi: 'https://api.cartassist.shop'
         };
       }
+      if (host === 'chat.datanetica.com') {
+        // Public client demo. The Cloudflare tunnel routes /v1 on this hostname to
+        // the dashboard edge (:8002) and everything else to this page (:8090), so
+        // the widget is same-origin — no CORS, and the Origin the edge sees is
+        // already on store 11's allowed_origins allowlist.
+        return {
+          widgetScript: window.location.origin + '/v1/widget/dn-chatbot.min.js',
+          widgetApi: window.location.origin + '/v1',
+          // Direct-core debug panel only; core is not publicly routed.
+          coreApi: 'http://127.0.0.1:8003'
+        };
+      }
       return {
         widgetScript: 'http://127.0.0.1:8002/v1/widget/dn-chatbot.min.js',
         widgetApi: 'http://127.0.0.1:8002/v1',
-        coreApi: 'http://127.0.0.1:8001'
+        // Ports 8001 and 8011 are occupied by unrelated local services.
+        coreApi: 'http://127.0.0.1:8012'
       };
     }
 
