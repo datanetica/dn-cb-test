@@ -506,7 +506,7 @@
     const PUBLIC_KEY = '';
     const DEFAULT_STORE_ID = '4';
     // Versioned so old browser session overrides cannot keep localhost/store 11.
-    const OVERRIDES_KEY = 'dn-demo-overrides-apogee99-vps-v2';
+    const OVERRIDES_KEY = 'dn-demo-overrides-apogee99-vps-v3';
     // Client-side gate password for the setup/debug tools (not real security).
     const SETUP_PASSWORD = 'Lexo123##';
 
@@ -561,10 +561,10 @@
         };
       }
       if (host === 'chat.datanetica.com') {
-        // Public client demo: call the VPS dashboard directly. Do not use this
-        // hostname's /v1 route; the Cloudflare tunnel maps it to the local dashboard.
+        // Keep the redesigned widget bundle on the demo host while all API traffic
+        // goes directly to the production dashboard/core on the VPS.
         return {
-          widgetScript: 'https://dashboard.cartassist.shop/v1/widget/dn-chatbot.min.js?v=98490ac',
+          widgetScript: window.location.origin + '/dn-chatbot.min.js?v=cartassist-20261026',
           widgetApi: 'https://dashboard.cartassist.shop/v1',
           coreApi: 'https://api.cartassist.shop'
         };
@@ -609,11 +609,13 @@
         apiUrl: trimSlash(c.widgetApi),
         position: 'bottom-right',
         branding: {
-          primaryColor: '#14120f',
-          secondaryColor: '#c86b39',
+          primaryColor: '#0BA895',
+          secondaryColor: '#08746F',
           bgColor: '#FFFFFF',
-          textColor: '#14120f',
+          textColor: '#142033',
           agentName: 'Apogee99 Assistant',
+          logo: window.location.origin + '/cartassist-icon.webp',
+          iconPack: 'lucide',
           welcomeMessage: 'Здравейте! Това е Apogee99 test site. Мога да помогна с продукти, наличност и съвместимост.'
         }
       };
