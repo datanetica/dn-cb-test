@@ -482,7 +482,7 @@
             </div>
             <div class="field">
               <label for="client-id">Client/store id</label>
-              <input id="client-id" class="input" value="1">
+              <input id="client-id" class="input" value="4">
             </div>
             <div class="field">
               <label for="chat-input">Message</label>
@@ -501,10 +501,12 @@
   </div>
 
   <script>
-    // Hardcoded storefront public widget key (public by design — safe in browser JS).
-    const PUBLIC_KEY = 'utU3nELf_8Z1-m0XB2P0Cg';
-    const DEFAULT_STORE_ID = '11';
-    const OVERRIDES_KEY = 'dn-demo-overrides-apogee99';
+    // Widget tenancy is resolved by store ID + the server-side Origin allowlist.
+    // Never embed the store's private sync/API key in this public page.
+    const PUBLIC_KEY = '';
+    const DEFAULT_STORE_ID = '4';
+    // Versioned so old browser session overrides cannot keep localhost/store 11.
+    const OVERRIDES_KEY = 'dn-demo-overrides-apogee99-vps-v2';
     // Client-side gate password for the setup/debug tools (not real security).
     const SETUP_PASSWORD = 'Lexo123##';
 
@@ -559,15 +561,12 @@
         };
       }
       if (host === 'chat.datanetica.com') {
-        // Public client demo. The Cloudflare tunnel routes /v1 on this hostname to
-        // the dashboard edge (:8002) and everything else to this page (:8090), so
-        // the widget is same-origin — no CORS, and the Origin the edge sees is
-        // already on store 11's allowed_origins allowlist.
+        // Public client demo: call the VPS dashboard directly. Do not use this
+        // hostname's /v1 route; the Cloudflare tunnel maps it to the local dashboard.
         return {
-          widgetScript: window.location.origin + '/v1/widget/dn-chatbot.min.js?v=98490ac',
-          widgetApi: window.location.origin + '/v1',
-          // Direct-core debug panel only; core is not publicly routed.
-          coreApi: 'http://127.0.0.1:8003'
+          widgetScript: 'https://dashboard.cartassist.shop/v1/widget/dn-chatbot.min.js?v=98490ac',
+          widgetApi: 'https://dashboard.cartassist.shop/v1',
+          coreApi: 'https://api.cartassist.shop'
         };
       }
       return {
